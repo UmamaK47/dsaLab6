@@ -16,8 +16,8 @@ public:
 	itemType deleteAtStart();
 	void insertAtEnd(itemType element);
 	itemType deleteAtEnd();
-	void insertAfter(itemType oldElement, itemType newElement);
-	itemType deleteAfter(itemType oldElement);
+	void insertAfter(int position, itemType newElement);
+	itemType deleteAfter(int position);
 	void display();
 	bool isEmpty();
 };
@@ -35,6 +35,7 @@ void List::insertAtStart(itemType element) {
 	if (newNode->next == nullptr) {
 		tail = newNode;
 	}
+	cout << "Inserted Successfully\n";
 }
 itemType List::deleteAtStart() {
 	if (isEmpty()) {
@@ -60,6 +61,7 @@ void List::insertAtEnd(itemType element) {
 		tail->next = newNode;
 		tail = newNode;
 	}
+	cout << "Inserted Successfully\n";
 }
 itemType List::deleteAtEnd() {
 	if (isEmpty()) {
@@ -80,42 +82,46 @@ itemType List::deleteAtEnd() {
 		tail->next = nullptr;
 		return data;
 	}
+	cout << "Removed Successfully\n";
 }
-void List::insertAfter(itemType oldElement, itemType newElement) {
+void List::insertAfter(int position, itemType newElement) {
 	Node* newNode = new Node();
 	newNode->data = newElement;
 	Node* current = head;
-	while (current != nullptr && current->data != oldElement) {
+	for (int i = 0; i < position&& current != nullptr; i++) {
 		current = current->next;
 	}
+	
 	if (current == nullptr) { 
-		cout << "Node with data " << oldElement << " not found." << endl;
+		cout << "Position not found\n";
 		return;
 	}
 	newNode->next = current->next;
 	current->next = newNode;
+	cout << "Inserted Successfully\n";
 	if (newNode->next == nullptr) {
 		tail = newNode;
 	}
 }
-itemType List::deleteAfter(itemType oldElement) {
+itemType List::deleteAfter(int position) {
 	itemType data;
 	Node* current = head;
 	if (isEmpty()) {
 		cout << "List is empty\n";
 		return NULL;
 	}
-	while (current != nullptr && current->data != oldElement) {
+	for (int i = 0; i < position && current != nullptr; i++) {
 		current = current->next;
 	}
+	
 	//if the previous element is not found
 	if (current == nullptr) {
-		cout << "Element " << oldElement << " not found in the list.\n";
+		cout << "Position not found\n";
 		return NULL;
 	}
 	//if next element dosent exist
 	if (current->next == nullptr) {
-		cout << "No element exists after " << oldElement<<"\n";
+		cout << "No element exists after this position\n";
 		return NULL;
 	}
 	else {
@@ -125,6 +131,7 @@ itemType List::deleteAfter(itemType oldElement) {
 		delete temp;
 		return data;
 	}
+	cout << "Removed Successfully\n";
 }
 void List::display(){
 	if (isEmpty()) {
@@ -146,7 +153,7 @@ int main() {
 	List list;
 	itemType data;
 	string choice;
-	double prevNum;
+	int pos;
 	char con = 'y';
 
 	do {
@@ -185,14 +192,14 @@ int main() {
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			}
-			cout << "\nEnter the Number after which you wish to insert";
+			cout << "\nEnter position: ";
 			
-			while (!(cin >> prevNum)) {
+			while (!(cin >> pos)) {
 				cout << "Invalid input. Please enter an integer: ";
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			}
-			list.insertAfter(prevNum, data);
+			list.insertAfter(pos, data);
 		}
 		else if (choice == "4") {
 			double num = list.deleteAtStart();
@@ -207,9 +214,9 @@ int main() {
 			}
 		}
 		else if (choice == "6") {
-			cout << "\nEnter the Number after which you wish to Delete";
-			cin>>prevNum;
-			double num = list.deleteAfter(prevNum);
+			cout << "\nEnter position: ";
+			cin>>pos;
+			double num = list.deleteAfter(pos);
 			if (num != NULL) { 
 				cout << "\nDeleted Number: " << num;
 			}
